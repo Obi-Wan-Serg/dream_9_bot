@@ -19,10 +19,6 @@ class Field:
         self.__value = value
 
 
-class Name(Field):
-    pass
-
-
 class Phone(Field):
     def __init__(self, value):
         self.validate(value)
