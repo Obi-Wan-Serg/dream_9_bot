@@ -1,1 +1,51 @@
+from datetime import datetime, timedelta
 
+
+class Contact:
+    def __init__(self, name, birthday):
+        self.name = name
+        self.birthday = birthday
+
+    def days_until_birthday(self):
+        today = datetime.now().date()
+        next_birthday = datetime(today.year, self.birthday.month, self.birthday.day).date()
+
+        if today > next_birthday:
+            days_lefs = datetime(today.year + 1, self.birthday.month, self.birthday.day).date()
+
+        days_lefs = (next_birthday - today).days
+        return days_lefs
+    
+
+class PersonalAssistant:
+    def __init__(self, contacts):
+        self.contacts = contacts
+    
+    def show_upcoming_birthdays(self, days):
+        today = datetime.now()
+        upcoming_birthdays = []
+
+        for contact in self.contacts:
+            days_lefs = contact.days_until_birthday()
+            if 0 < days_lefs <= days:
+                upcoming_birthdays.append((contact.name, days_lefs))
+        
+        return upcoming_birthdays
+    
+
+# if __name__ == '__main__':
+#     contacts = [
+#         Contact('Olha', datetime(2000, 1, 12)),
+#         Contact('Sam', datetime(2010, 12, 31)),
+#         ]
+    
+#     assistant = PersonalAssistant(contacts)
+
+#     upcoming_birthdays = assistant.show_upcoming_birthdays(30)
+
+#     if upcoming_birthdays:
+#         print('Контакти з наближеними днями народження:')
+#         for name, days_left in upcoming_birthdays:
+#             print(f'{name}: через {days_left} днів.')
+#     else:
+#         print('Немає контактів з наближеними днями народження.')
