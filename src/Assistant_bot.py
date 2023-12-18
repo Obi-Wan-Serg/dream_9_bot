@@ -2,8 +2,9 @@ import cmd
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from get_weather import get_weather, format_weather
-from AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note
+#from get_weather_module import get_weather, format_weather
+from AddressBook import AddressBook
+from validate import Record, Name, Phone, Birthday, Email, Country, Note
 
 
 class AddressBookCLI(cmd.Cmd):
@@ -124,16 +125,16 @@ class AddressBookCLI(cmd.Cmd):
 
         self.console.print(table)
 
-    def do_weather(self, arg):
-        'Get weather for a city: weather [city_name]'
-        city = arg or input("Enter city name: ")
-        api_key = '16bfe776fb8afe007ed1f21a6277aba2'  # Ваш API-ключ
-        try:
-            weather_data = get_weather(city, api_key)
-            weather_report = format_weather(weather_data)
-            self.console.print(weather_report, style="bold blue")
-        except Exception as e:
-            self.console.print(f"Error: {str(e)}", style="bold red")
+    # def do_weather(self, arg):
+    #     'Get weather for a city: weather [city_name]'
+    #     city = arg or input("Enter city name: ")
+    #     api_key = '16bfe776fb8afe007ed1f21a6277aba2'  # Ваш API-ключ
+    #     try:
+    #         weather_data = get_weather(city, api_key)
+    #         weather_report = format_weather(weather_data)
+    #         self.console.print(weather_report, style="bold blue")
+    #     except Exception as e:
+    #         self.console.print(f"Error: {str(e)}", style="bold red")
 
     def do_exit(self, arg):
         'Exit the application: exit'
