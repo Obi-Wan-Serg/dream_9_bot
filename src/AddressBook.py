@@ -108,15 +108,13 @@ class AddressBook(UserList):
         group_new = group.strip().lower().replace(' ', '')
         sample_new = sample.strip().lower().replace(' ', '')
 
-        for contact in self.data:
+        for account in self.data:
             if group_new == 'phones':
-
-                for phone in contact['phones']:
-
+                for phone in account['phones']:
                     if phone.lower().startswith(sample_new):
-                        result.append(contact)
-            elif contact[group_new].lower().replace(' ', '').startswith(sample_new):
-                result.append(contact)
+                        result.append(account)
+            elif account[group_new].lower().replace(' ', '').startswith(sample_new):
+                result.append(account)
         if not result:
             print('There is no such contact in address book!')
         return result
@@ -125,9 +123,9 @@ class AddressBook(UserList):
     def edit(self, contact_name, param, new_value):
         names = []
         try:
-            for contact in self.data:
-                names.append(contact['name'])
-                if contact['name'] == contact_name:
+            for account in self.data:
+                names.append(account['name'])
+                if account['name'] == contact_name:
                     if param == 'birthday':
                         new_value = Birthday(new_value).value
                     elif param == 'email':
@@ -139,8 +137,8 @@ class AddressBook(UserList):
                         new_value = []
                         for number in new_contact:
                             new_value.append(Phone(number).value)
-                    if parameter in contact.keys():
-                        contact[parameter] = new_value
+                    if parameter in account.keys():
+                        account[param] = new_value
                     else:
                         raise ValueError
             if contact_name not in names:
@@ -157,14 +155,14 @@ class AddressBook(UserList):
 # Видаляє контакт за вказаним ім'ям.
     def remove(self, sample):
         flag = False
-        for contact in self.data:
-            if contact['name'] == sample:
-                self.data.remove(contact)
-                self.log(f"Contact {contact['name']} has been removed!")
+        for account in self.data:
+            if account['name'] == sample:
+                self.data.remove(account)
+                self.log(f"Contact {account['name']} has been removed!")
                 flag = True
             '''if sample in contact['phones']:
-                        contact['phones'].remove(sample)
-                        self.log.log(f"Phone number of {contact['name']} has been removed!")'''
+                        account['phones'].remove(sample)
+                        self.log.log(f"Phone number of {account['name']} has been removed!")'''
         return flag
 
     def __get_current_week(self):
