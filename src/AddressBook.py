@@ -1,7 +1,7 @@
 from datetime import datetime as dt, timedelta
 from collections import UserList
 import pickle
-from info import *
+from validate import *
 import os
 
 
@@ -18,14 +18,14 @@ class AddressBook(UserList):
         for account in self.data:
             # Форматуємо день народження або встановлюємо його в порожній рядок, якщо він не існує
             birth = account['birthday'].strftime(
-                "%d/%m/%Y") if account['birthday'] else ''
+                "%d.%m.%Y") if account['birthday'] else ''
 
             # Відформатуємо телефони, відфільтрувавши значення None
             phones = ', '.join(filter(None, account['phones']))
 
             # Додаємо відформатовану інформацію про акаунт до списку результатів
-            result.append("~" * 52 + f"\nName: {account['name']} \nPhones: {phones} \nBirthday: {birth} \n"
-                          f"Email: {account['email']} \nStatus: {account['status']} \nNote: {account['note']}\n" + "~" * 52 + '\n')
+            result.append("~" * 52 + f"\nName: {account['name']} \nCountry: {account['country']} \nPhones: {phones} \nBirthday: {birth} \n"
+                          f"Email: {account['email']} \nNote: {account['note']}\n" + "~" * 52 + '\n')
 
         # Об'єднати відформатовану інформацію про акаунт в один рядок і повернути
         return '\n'.join(result)
@@ -43,14 +43,13 @@ class AddressBook(UserList):
         account = self.data[self.counter]
         # Відформатуємо день народження або встановимо його в порожній рядок, якщо він не існує
         birth = account['birthday'].strftime(
-            "%d/%m/%Y") if account['birthday'] else ''
+            "%d.%m.%Y") if account['birthday'] else ''
         # Відформатуємо телефони, відфільтрувавши значення None
         phones = ', '.join(filter(None, account['phones']))
 
         # Згенерувати відформатований рядок, що представляє поточний рахунок
-        result = "~" * 52 + f"\nName: {account['name']} \nPhones: {phones} \nBirthday: {birth} \n" \
-            f"Email: {account['email']} \nStatus: {
-                account['status']} \nNote: {account['note']}\n" + "~" * 52
+        result = "~" * 52 + f"\nName: {account['name']} \nCountry: {account['country']} \nPhones: {phones} \nBirthday: {birth} \n" \
+            f"Email: {account['email']} \nNote: {account['note']}\n" + "~" * 52
 
         # Повернути відформатований рядок
         return result
@@ -74,10 +73,10 @@ class AddressBook(UserList):
 
     def add(self, record):
         account = {'name': record.name,
+                   'country': record.country,
                    'phones': record.phones,
                    'birthday': record.birthday,
                    'email': record.email,
-                   'status': record.status,
                    'note': record.note}
         self.data.append(account)
         self.log(f"Contact {record.name} has been added.")
@@ -131,7 +130,7 @@ class AddressBook(UserList):
                     elif param == 'email':
                         new_value = Email(new_value).value
                     elif param == 'status':
-                        new_value = Status(new_value).value
+                        new_value = Country(new_value).value
                     elif param == 'phones':
                         new_contact = new_value.split(' ')
                         new_value = []
