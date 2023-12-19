@@ -41,7 +41,8 @@ class AddressBook(UserList):
         for number in self.data[self.counter]['phones']:
             if number:
                 phones.append(number)
-        result = "_" * 50 + "\n" + f"Name: {self.data[self.counter]['name']} \nCountry: {self.data[self.counter]['country']} \nPhones: {', '.join(phones)} \nBirthday: {birth} \nEmail: {self.data[self.counter]['email']} \nNote: {self.data[self.counter]['note']}\n" + "_" * 50
+        result = "_" * 50 + "\n" + f"Name: {self.data[self.counter]['name']} \nCountry: {self.data[self.counter]['country']} \nPhones: {
+            ', '.join(phones)} \nBirthday: {birth} \nEmail: {self.data[self.counter]['email']} \nNote: {self.data[self.counter]['note']}\n" + "_" * 50
         return result
 
     def __iter__(self):
@@ -123,7 +124,7 @@ class AddressBook(UserList):
                         new_contact = new_value.split(' ')
                         new_value = []
                         for number in new_contact:
-                            new_value.append(Phone(number).value)
+                            new_value.extend(Phone(number).value)
                     if parameter in account.keys():
                         account[parameter] = new_value
                     else:
