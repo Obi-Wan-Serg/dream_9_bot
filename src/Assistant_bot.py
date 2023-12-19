@@ -7,7 +7,7 @@ from .AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Coun
 
 
 class AddressBookCLI(cmd.Cmd):
-    intro = 'Welcome to the Address Book. Type help or ? to list commands.\n'
+    intro = 'Для користування книгою контактів наберіть help чи ?.\n'
     prompt = '>>>>>>>'
     console = Console()
 
@@ -17,26 +17,26 @@ class AddressBookCLI(cmd.Cmd):
 
     def do_add(self, arg):
         'Add a new contact: add'
-        name = Name(input("Name: ")).value.strip()
+        name = Name(input("Ім'я: ")).value.strip()
         country = Country().value.capitalize()
         phones = Phone().value
         birth = Birthday().value
         email = Email().value.strip()
-        note = Note(input("Note: ")).value
+        note = Note(input("Нотатка: ")).value
         record = Record(name, country, phones, birth, email, note)
         self.book.add(record)
-        self.console.print("Contact added successfully.", style="bold green")
+        self.console.print("Контакт успішно додано.", style="bold green")
 
     def do_search(self, arg):
         'Search contacts: search'
-        print("There are following categories: \nName \nCountry \nPhones \nBirthday \nEmail \nNote")
-        category = input('Search category: ')
-        pattern = input('Search pattern: ')
+        print("Є наступні категорії: \nName \nCountry \nPhones \nBirthday \nEmail \nNote")
+        category = input('Пошук за категорією: ')
+        pattern = input('Введіть текст для пошуку: ')
         result = self.book.search(pattern, category)
 
         if not result:
             self.console.print(
-                "There is no such contact in address book!", style="bold red")
+                "Такий контакт відсутній в книзі контактів!", style="bold red")
             return
 
         table = Table(show_header=True, header_style="bold magenta")
@@ -66,32 +66,33 @@ class AddressBookCLI(cmd.Cmd):
 
     def do_edit(self, arg):
         'Edit a contact: edit'
-        contact_name = input('Contact name: ')
+        contact_name = input("Ім'я контакту: ")
         parameter = input(
-            'Which parameter to edit(name, country, phones, birthday, email, note): ').strip()
-        new_value = input("New Value: ")
+            'Оберіть параметр для редагування (name, country, phones, birthday, email, note): ').strip()
+        new_value = input("Нове значення: ")
         self.book.edit(contact_name, parameter, new_value)
-        self.console.print("Contact edited successfully.", style="bold green")
+        self.console.print("Контакт успішно відредаговано.",
+                           style="bold green")
 
     def do_remove(self, arg):
         'Remove a contact: remove'
-        pattern = input("Remove (contact name or phone): ")
+        pattern = input("Видалити (ім'я контакту чи номер телефону): ")
         self.book.remove(pattern)
-        self.console.print("Contact removed successfully.", style="bold green")
+        self.console.print("Контакт успішно видалено.", style="bold green")
 
     def do_save(self, arg):
         'Save address book to a file: save'
-        file_name = input("File name: ")
+        file_name = input("Ім'я файла: ")
         self.book.save(file_name)
         self.console.print(
-            "Address book saved successfully.", style="bold green")
+            "Книга контактів успішно збережена.", style="bold green")
 
     def do_load(self, arg):
         'Load address book from a file: load'
-        file_name = input("File name: ")
+        file_name = input("Ім'я файла: ")
         self.book.load(file_name)
         self.console.print(
-            "Address book loaded successfully.", style="bold green")
+            "Книга контактів успішно завантажена.", style="bold green")
 
     def do_congratulate(self, arg):
         'Congratulate contacts: congratulate'
@@ -126,7 +127,7 @@ class AddressBookCLI(cmd.Cmd):
 
     def do_weather(self, arg):
         'Get weather for a city: weather [city_name]'
-        city = arg or input("Enter city name: ")
+        city = arg or input("Введіть назву міста: ")
         api_key = '16bfe776fb8afe007ed1f21a6277aba2'  # Ваш API-ключ
         try:
             weather_data = get_weather(city, api_key)
