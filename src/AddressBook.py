@@ -163,21 +163,21 @@ class AddressBook(UserList):
 
     def congratulate(self):
         result = []
-        WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
-                    'Thursday', 'Friday', 'Saturday', 'Sunday']
+        WEEKDAYS = ['Понеділок', 'Вівторок', 'Середа',
+                    'Четвер', "П'ятниця", 'Субота', 'Неділя']
         current_year = dt.now().year
-        congratulate = {'Monday': [], 'Tuesday': [],
-                        'Wednesday': [], 'Thursday': [], 'Friday': []}
+        congratulate = {'Понеділок': [], 'Вівторок': [],
+                        'Середа': [], 'Четвер': [], "П'ятниця": []}
         for account in self.data:
             if account['birthday']:
                 new_birthday = account['birthday'].replace(year=current_year)
                 birthday_weekday = new_birthday.weekday()
-                if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
+                if self.__get_current_week()[0] <= new_birthday < self.__get_current_week()[1]:
                     if birthday_weekday < 5:
                         congratulate[WEEKDAYS[birthday_weekday]].append(
                             account['name'])
                     else:
-                        congratulate['Monday'].append(account['name'])
+                        congratulate['Понеділок'].append(account['name'])
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"{key}: {' '.join(value)}")
