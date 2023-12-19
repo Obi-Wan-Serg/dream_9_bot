@@ -71,13 +71,13 @@ class AddressBook(UserList):
                    'email': record.email,
                    'note': record.note}
         self.data.append(account)
-        self.log(f"Contact {record.name} has been added.")
+        self.log(f"Контакт {record.name} було додано.")
 
     def save(self, file_name):
         file_path = os.path.join('src', file_name + '.bin')
         with open(file_path, 'wb') as file:
             pickle.dump(self.data, file)
-        self.log("Addressbook has been saved!")
+        self.log("Книгу контактів збережено!")
 
     def load(self, file_name):
         file_path = os.path.join('src', file_name + '.bin')
@@ -85,9 +85,9 @@ class AddressBook(UserList):
         if emptyness.st_size != 0:
             with open(file_path, 'rb') as file:
                 self.data = pickle.load(file)
-            self.log("Addressbook has been loaded!")
+            self.log("Книгу контактів завантажено!")
         else:
-            self.log('Addressbook has been created!')
+            self.log('Книгу контактів створено!')
         return self.data
 
     def search(self, pattern, category):
@@ -105,7 +105,7 @@ class AddressBook(UserList):
             elif account[category_new].lower().replace(' ', '') == pattern_new:
                 result.append(account)
         if not result:
-            print('There is no such contact in address book!')
+            print('Такого контакту не знайдено!')
         return result
 
     def edit(self, contact_name, parameter, new_value):
@@ -132,11 +132,11 @@ class AddressBook(UserList):
             if contact_name not in names:
                 raise NameError
         except ValueError:
-            print('Incorrect parameter! Please provide correct parameter')
+            print('Невірний параметр! Спробуйте знову.')
         except NameError:
-            print('There is no such contact in address book!')
+            print('Такого контакту не знайдено!')
         else:
-            self.log(f"Contact {contact_name} has been edited!")
+            self.log(f"Контакт {contact_name} відредаговано!")
             return True
         return False
 
@@ -145,7 +145,7 @@ class AddressBook(UserList):
         for account in self.data:
             if account['name'] == pattern:
                 self.data.remove(account)
-                self.log(f"Contact {account['name']} has been removed!")
+                self.log(f"Контакт {account['name']} видалено!")
                 flag = True
             '''if pattern in account['phones']:
                         account['phones'].remove(pattern)
