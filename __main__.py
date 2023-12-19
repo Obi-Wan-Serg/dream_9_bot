@@ -10,12 +10,16 @@ if __name__ == "__main__":
 
     cli = AddressBookCLI()
 
+    file_path = os.path.join('src', 'auto_save.bin')
+
     # Перевіряємо, чи існує файл перед його завантаженням
-    if os.path.exists("auto_save.bin"):
+    if os.path.exists(file_path):
         cli.book.load("auto_save")
-        console.print("Завантажено існуючу адресну книгу.", style="italic yellow")
+        console.print("Завантажено існуючу адресну книгу.",
+                      style="italic yellow")
     else:
-        console.print("Жодного збереженого адресного книги не знайдено. Починаємо з порожньої книги.", style="italic red")
+        console.print(
+            "Жодного збереженого адресного книги не знайдено. Починаємо з порожньої книги.", style="italic red")
 
     cli.cmdloop()
 

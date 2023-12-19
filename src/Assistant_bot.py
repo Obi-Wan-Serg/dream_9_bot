@@ -2,8 +2,8 @@ import cmd
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from get_weather import get_weather, format_weather
-from AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note
+from .get_weather_module import get_weather, format_weather
+from .AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note
 
 
 class AddressBookCLI(cmd.Cmd):
@@ -23,7 +23,7 @@ class AddressBookCLI(cmd.Cmd):
         birth = Birthday().value
         email = Email().value.strip()
         note = Note(input("Note: ")).value
-        record = Record(name, phones, birth, email, country, note)
+        record = Record(name, country, phones, birth, email, note)
         self.book.add(record)
         self.console.print("Contact added successfully.", style="bold green")
 
@@ -43,7 +43,7 @@ class AddressBookCLI(cmd.Cmd):
 
         # Додаємо стовпці до таблиці
         table.add_column("Ім'я")
-        table.add_column("Країна", justify="right")
+        table.add_column("Країна")
         table.add_column("Телефон")
         table.add_column("Дата народження", justify="right")
         table.add_column("Електронна пошта", justify="right")
@@ -56,7 +56,7 @@ class AddressBookCLI(cmd.Cmd):
             phone = Text(
                 ', '.join(account['phones']) if account['phones'] else "", style="magenta")
             birth = Text(account['birthday'].strftime(
-                "%d.%m.%Y") if account['birthday'] else "", style="green")
+                '%d.%m.%Y') if account['birthday'] else "", style="green")
             email = Text(account['email'], style="blue")
             note = Text(account['note'], style="red")
 
@@ -103,7 +103,7 @@ class AddressBookCLI(cmd.Cmd):
 
         # Додаємо стовпці до таблиці
         table.add_column("Ім'я")
-        table.add_column("Країна", justify="right")
+        table.add_column("Країна")
         table.add_column("Телефон")
         table.add_column("Дата народження", justify="right")
         table.add_column("Електронна пошта", justify="right")
@@ -116,7 +116,7 @@ class AddressBookCLI(cmd.Cmd):
             phone = Text(
                 ', '.join(account['phones']) if account['phones'] else "", style="magenta")
             birth = Text(account['birthday'].strftime(
-                "%d.%m.%Y") if account['birthday'] else "", style="green")
+                '%d.%m.%Y') if account['birthday'] else "", style="green")
             email = Text(account['email'], style="blue")
             note = Text(account['note'], style="red")
 

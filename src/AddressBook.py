@@ -1,7 +1,7 @@
 from datetime import datetime as dt, timedelta
 from collections import UserList
 import pickle
-from validate import *
+from .validate import *
 import os
 
 
@@ -11,47 +11,37 @@ class AddressBook(UserList):
         self.counter = -1
 
     def __str__(self):
-        # Ініціалізувати порожній список для зберігання відформатованої інформації про обліковий запис
         result = []
-
-        # Перебір кожного акаунта в даних
         for account in self.data:
-            # Форматуємо день народження або встановлюємо його в порожній рядок, якщо він не існує
-            birth = account['birthday'].strftime(
-                "%d.%m.%Y") if account['birthday'] else ''
-
-            # Відформатуємо телефони, відфільтрувавши значення None
-            phones = ', '.join(filter(None, account['phones']))
-
-            # Додаємо відформатовану інформацію про акаунт до списку результатів
-            result.append("~" * 52 + f"\nName: {account['name']} \nCountry: {account['country']} \nPhones: {phones} \nBirthday: {birth} \n"
-                          f"Email: {account['email']} \nNote: {account['note']}\n" + "~" * 52 + '\n')
-
-        # Об'єднати відформатовану інформацію про акаунт в один рядок і повернути
+            if account['birthday']:
+                birth = account['birthday'].strftime('%d.%m.%Y')
+            else:
+                birth = ''
+            if account['phones']:
+                new_value = []
+                for phone in account['phones']:
+                    print(phone)
+                    if phone:
+                        new_value.append(phone)
+                phone = ', '.join(new_value)
+            else:
+                phone = ''
+            result.append(
+                "_" * 50 + "\n" + f"Name: {account['name']} \nCountry: {account['country']} \nPhones: {phone} \nBirthday: {birth} \nEmail: {account['email']} \nNote: {account['note']}\n" + "_" * 50 + '\n')
         return '\n'.join(result)
 
     def __next__(self):
-        # Збільшити лічильник для переходу на наступний рахунок
+        phones = []
         self.counter += 1
-
-        # Скидаємо лічильник на -1 і викликаємо StopIteration, якщо пройдено всі акаунти
+        if self.data[self.counter]['birthday']:
+            birth = self.data[self.counter]['birthday'].strftime('%d.%m.%Y')
         if self.counter == len(self.data):
             self.counter = -1
             raise StopIteration
-
-        # Отримати поточний рахунок
-        account = self.data[self.counter]
-        # Відформатуємо день народження або встановимо його в порожній рядок, якщо він не існує
-        birth = account['birthday'].strftime(
-            "%d.%m.%Y") if account['birthday'] else ''
-        # Відформатуємо телефони, відфільтрувавши значення None
-        phones = ', '.join(filter(None, account['phones']))
-
-        # Згенерувати відформатований рядок, що представляє поточний рахунок
-        result = "~" * 52 + f"\nName: {account['name']} \nCountry: {account['country']} \nPhones: {phones} \nBirthday: {birth} \n" \
-            f"Email: {account['email']} \nNote: {account['note']}\n" + "~" * 52
-
-        # Повернути відформатований рядок
+        for number in self.data[self.counter]['phones']:
+            if number:
+                phones.append(number)
+        result = "_" * 50 + "\n" + f"Name: {self.data[self.counter]['name']} \nCountry: {self.data[self.counter]['country']} \nPhones: {', '.join(phones)} \nBirthday: {birth} \nEmail: {self.data[self.counter]['email']} \nNote: {self.data[self.counter]['note']}\n" + "_" * 50
         return result
 
     def __iter__(self):
@@ -68,7 +58,8 @@ class AddressBook(UserList):
     def log(self, action):
         current_time = dt.strftime(dt.now(), '%H:%M:%S')
         message = f'[{current_time}] {action}'
-        with open('logs.txt', 'a') as file:
+        log_path = os.path.join('src', 'logs.txt')
+        with open(log_path, 'a') as file:
             file.write(f'{message}\n')
 
     def add(self, record):
@@ -81,63 +72,60 @@ class AddressBook(UserList):
         self.data.append(account)
         self.log(f"Contact {record.name} has been added.")
 
-    def save(self, file):
-        # зберігає дані адресної книги у бінарний файл за вказаним ім'ям
-        with open(file + '.bin', 'wb') as f:
-            pickle.dump(self.data, f)
+    def save(self, file_name):
+        file_path = os.path.join('src', file_name + '.bin')
+        with open(file_path, 'wb') as file:
+            pickle.dump(self.data, file)
         self.log("Addressbook has been saved!")
 
-    # завантажує дані адресної книги з бінарного файлу
-    def load_pickle(self, file):
-        try:
-            with open(file + '.bin', 'wb') as f:
-                self.data = pickle.load(f)
-            self.log('Addressbook has been loaded')
-        except FileNotFoundError:
-            # виникає, якщо файл для адресної книги не знайдено
-            self.log("Addressbook file not found. Creating a new one")
-        except pickle.UnpicklingError:
-            # виникає, якщо сталася помилка під час десеріалізації даних
-            self.log("Error unplicking data. Creating a new address book")
+    def load(self, file_name):
+        file_path = os.path.join('src', file_name + '.bin')
+        emptyness = os.stat(file_path)
+        if emptyness.st_size != 0:
+            with open(file_path, 'rb') as file:
+                self.data = pickle.load(file)
+            self.log("Addressbook has been loaded!")
+        else:
+            self.log('Addressbook has been created!')
         return self.data
 
-# Шукає контакти за зразком та групою.
-    def search(self, sample, group):
+    def search(self, pattern, category):
         result = []
-        group_new = group.strip().lower().replace(' ', '')
-        sample_new = sample.strip().lower().replace(' ', '')
+        category_new = category.strip().lower().replace(' ', '')
+        pattern_new = pattern.strip().lower().replace(' ', '')
 
         for account in self.data:
-            if group_new == 'phones':
+            if category_new == 'phones':
+
                 for phone in account['phones']:
-                    if phone.lower().startswith(sample_new):
+
+                    if phone.lower().startswith(pattern_new):
                         result.append(account)
-            elif account[group_new].lower().replace(' ', '').startswith(sample_new):
+            elif account[category_new].lower().replace(' ', '') == pattern_new:
                 result.append(account)
         if not result:
             print('There is no such contact in address book!')
         return result
 
-# Редагує вказані параметри контакту.
-    def edit(self, contact_name, param, new_value):
+    def edit(self, contact_name, parameter, new_value):
         names = []
         try:
             for account in self.data:
                 names.append(account['name'])
                 if account['name'] == contact_name:
-                    if param == 'birthday':
+                    if parameter == 'birthday':
                         new_value = Birthday(new_value).value
-                    elif param == 'email':
+                    elif parameter == 'email':
                         new_value = Email(new_value).value
-                    elif param == 'status':
+                    elif parameter == 'country':
                         new_value = Country(new_value).value
-                    elif param == 'phones':
+                    elif parameter == 'phones':
                         new_contact = new_value.split(' ')
                         new_value = []
                         for number in new_contact:
                             new_value.append(Phone(number).value)
                     if parameter in account.keys():
-                        account[param] = new_value
+                        account[parameter] = new_value
                     else:
                         raise ValueError
             if contact_name not in names:
@@ -151,16 +139,15 @@ class AddressBook(UserList):
             return True
         return False
 
-# Видаляє контакт за вказаним ім'ям.
-    def remove(self, sample):
+    def remove(self, pattern):
         flag = False
         for account in self.data:
-            if account['name'] == sample:
+            if account['name'] == pattern:
                 self.data.remove(account)
                 self.log(f"Contact {account['name']} has been removed!")
                 flag = True
-            '''if sample in contact['phones']:
-                        account['phones'].remove(sample)
+            '''if pattern in account['phones']:
+                        account['phones'].remove(pattern)
                         self.log.log(f"Phone number of {account['name']} has been removed!")'''
         return flag
 
@@ -174,43 +161,23 @@ class AddressBook(UserList):
         return [week_start.date(), week_start.date() + timedelta(days=7)]
 
     def congratulate(self):
-        # Отримати словник привітань методом __get_congratulations
-        result = [
-            f"{weekday}: {' '.join(accounts)}"
-            for weekday, accounts in self.__get_congratulations().items() if accounts
-        ]
-        # Відформатуйте та поверніть результат
-        return '~' * 52 + '\n' + '\n'.join(result) + '\n' + '~' * 52
-
-    def __get_congratulations(self):
-        # Визначте дні тижня та отримайте поточний рік
+        result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
         current_year = dt.now().year
-
-        # Ініціалізувати порожній словник для зберігання привітальних повідомлень
-        congratulate = {weekday: [] for weekday in WEEKDAYS[:5]}
-
-        # Ітерація над кожним обліковим записом у даних
+        congratulate = {'Monday': [], 'Tuesday': [],
+                        'Wednesday': [], 'Thursday': [], 'Friday': []}
         for account in self.data:
             if account['birthday']:
-                # Пристосуйте дату народження до поточного року
                 new_birthday = account['birthday'].replace(year=current_year)
-
-                # Перевірте, чи скоригований день народження знаходиться на поточному тижні
-                if self.__is_birthday_in_current_week(new_birthday):
-                    # Визначте день тижня та додайте назву до відповідного списку
-                    weekday = WEEKDAYS[new_birthday.weekday(
-                    )] if new_birthday.weekday() < 5 else 'Monday'
-                    congratulate[weekday].append(account['name'])
-
-        # Повернути словник з вітальними повідомленнями
-        return congratulate
-
-    def __is_birthday_in_current_week(self, birthday):
-        # Отримати дати початку та закінчення поточного тижня
-        current_week_start = self.__get_current_week()[0]
-        current_week_end = self.__get_current_week()[1]
-
-        # Перевірте, чи є день народження на поточному тижні
-        return current_week_start <= birthday.date() < current_week_end
+                birthday_weekday = new_birthday.weekday()
+                if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
+                    if birthday_weekday < 5:
+                        congratulate[WEEKDAYS[birthday_weekday]].append(
+                            account['name'])
+                    else:
+                        congratulate['Monday'].append(account['name'])
+        for key, value in congratulate.items():
+            if len(value):
+                result.append(f"{key}: {' '.join(value)}")
+        return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
