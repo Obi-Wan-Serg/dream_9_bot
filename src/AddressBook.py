@@ -136,7 +136,7 @@ class AddressBook(UserList):
                         new_value = []
                         for number in new_contact:
                             new_value.append(Phone(number).value)
-                    if parameter in account.keys():
+                    if param in account.keys():
                         account[param] = new_value
                     else:
                         raise ValueError
