@@ -5,7 +5,7 @@ from rich.console import Console
 if __name__ == "__main__":
     console = Console()
 
-    console.print('Привіт. Я ваш помічник з контактами.', style="bold green")
+    console.print('Привіт! Я ваш помічник з контактами.', style="bold green")
     console.print('Що я маю зробити з вашими контактами?', style="bold blue")
 
     cli = AddressBookCLI()

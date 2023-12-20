@@ -21,7 +21,8 @@ class Record:
         if self.birthday >= current_datetime:
             result = self.birthday - current_datetime
         else:
-            self.birthday = self.birthday.replace(year=current_datetime.year + 1)
+            self.birthday = self.birthday.replace(
+                year=current_datetime.year + 1)
             result = self.birthday - current_datetime
         return result.days
 
@@ -61,7 +62,7 @@ class Country(Field):
                 else:
                     raise ValueError
             except ValueError:
-                print('На щастя, такої країни не існує або вона вже на межі колапсу. Ваш контакт не буде додано, спробуйте іншу країну для продовження.')
+                print('На щастя, такої країни не існує або вона вже на межі колапсу.\nВаш контакт не буде додано, спробуйте іншу країну для продовження.')
 
     def __getitem__(self):
         return self.value
@@ -76,7 +77,7 @@ class Phone(Field):
                 self.values = value
             else:
                 self.values = input(
-                    "Будь ласка введіть номер телефону у форматі 10 чисел, починаючи з нуля (для декількох номерів використовуйте пробіл між ними): ")
+                    "Будь ласка введіть номер телефону у форматі 10 чисел, починаючи з нуля\n(для декількох номерів використовуйте пробіл між ними): ")
             # перевірка на правильність введенного телефонного номеру
             try:
                 for number in self.values.split(' '):
@@ -119,7 +120,7 @@ class Birthday(Field):
                     raise ValueError
             except ValueError:
                 print(
-                    'Дата народження має бути у форматі: день.місяць.рік. Дата народження не може бути в майбутньому!')
+                    'Дата народження має бути у форматі: день.місяць.рік.\nДата народження не може бути в майбутньому!')
 
     def __getitem__(self):
         return self.value

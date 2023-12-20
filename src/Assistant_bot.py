@@ -10,7 +10,7 @@ from .main import main
 
 class AddressBookCLI(cmd.Cmd):
     intro = 'Для користування книгою контактів наберіть help чи ?.\n'
-    prompt = '>>>>>>>'
+    prompt = '>>>>>>>  '
     console = Console()
 
     def __init__(self):
@@ -19,15 +19,16 @@ class AddressBookCLI(cmd.Cmd):
 
     def do_sort_files(self, args):
         'Sort files in a directory'
-        folder_path = input("Please enter the path to the directory to sort: ")
+        folder_path = input(
+            "Будь ласка вкажіть шлях до папки\n в якій необхідно відсортувати файли: ")
         folder_path = Path(folder_path)
         if not folder_path.exists() or not folder_path.is_dir():
-            print("Invalid directory path. Please enter a valid path.")
+            print("Вказано невірний шлях. Спробуйте ще раз.")
             return
         try:
             # Виклик функції сортування
             main(folder_path.resolve())
-            print(f"Files in {folder_path} have been sorted.")
+            print(f"Файли за шляхом {folder_path} були відсортовані.")
         except Exception as e:
             print(f"An error occurred: {e}")
 
@@ -94,7 +95,7 @@ class AddressBookCLI(cmd.Cmd):
         'Edit a contact: edit'
         contact_name = input("Ім'я контакту: ")
         parameter = input(
-            'Оберіть параметр для редагування (name, country, phones, birthday, email, note): ').strip()
+            'Оберіть параметр для редагування\n(name, country, phones, birthday, email, note): ').strip()
         new_value = input("Нове значення: ")
         self.book.edit(contact_name, parameter, new_value)
         self.console.print("Контакт успішно відредаговано.",
