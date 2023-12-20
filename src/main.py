@@ -1,23 +1,33 @@
 from pathlib import Path
 import shutil
 import sys
-import file_parser
-from normalize import normalize
+from . import file_parser
+from .normalize import normalize
+
 
 def handle_files(file_name: Path, target_folder: Path):
-    target_folder.mkdir(exist_ok=True, parents=True) # створення папки для файлів
-    file_name.replace(target_folder / normalize(file_name.name)) # переміщення файлів в створену папку
+    # створення папки для файлів
+    target_folder.mkdir(exist_ok=True, parents=True)
+    # переміщення файлів в створену папку
+    file_name.replace(target_folder / normalize(file_name.name))
+
 
 def handle_archive(file_name: Path, target_folder: Path):
-    target_folder.mkdir(exist_ok=True, parents=True) # створення папки для файлів
-    folder_for_file = target_folder / normalize(file_name.name.replace(file_name.suffix, '')) # створення шляху до папки для розпакованих файлів
+    # створення папки для файлів
+    target_folder.mkdir(exist_ok=True, parents=True)
+    # створення шляху до папки для розпакованих файлів
+    folder_for_file = target_folder / \
+        normalize(file_name.name.replace(file_name.suffix, ''))
     folder_for_file.mkdir(exist_ok=True, parents=True)
     try:
-        shutil.unpack_archive(str(file_name.absolute()), str(folder_for_file.absolute())) # розпаковка архіву по вказаному шляху
+        shutil.unpack_archive(str(file_name.absolute()), str(
+            folder_for_file.absolute()))  # розпаковка архіву по вказаному шляху
     except shutil.ReadError:
-        folder_for_file.rmdir() # видалення папки якщо розпаковка архіву призвела до помилки ReadError
+        # видалення папки якщо розпаковка архіву призвела до помилки ReadError
+        folder_for_file.rmdir()
         return
-    file_name.unlink() # видалення початкового файлу архіву
+    file_name.unlink()  # видалення початкового файлу архіву
+
 
 def main(folder: Path):
     file_parser.scan(folder)
