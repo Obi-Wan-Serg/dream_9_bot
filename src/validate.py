@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 class Record:
 
-    def __init__(self, name, country='', phones='', birthday='', email='', note=''):
+    def __init__(self, name, country='', phones='', birthday='', email='', note='', tags=None):
 
         self.birthday = birthday
         self.name = name
@@ -13,6 +13,7 @@ class Record:
         self.email = email
         self.country = country
         self.note = note
+        self.tags = tags if tags else []
 
     def days_to_birthday(self):
         current_datetime = datetime.now()
@@ -20,8 +21,7 @@ class Record:
         if self.birthday >= current_datetime:
             result = self.birthday - current_datetime
         else:
-            self.birthday = self.birthday.replace(
-                year=current_datetime.year + 1)
+            self.birthday = self.birthday.replace(year=current_datetime.year + 1)
             result = self.birthday - current_datetime
         return result.days
 
@@ -151,6 +151,24 @@ class Note(Field):
 
     def __init__(self, value):
         self.value = value
+
+    def __getitem__(self):
+        return self.value
+
+
+class Tag(Field):
+
+    def __init__(self, value=''):
+        while True:
+            if value:
+                self.value = value
+            else:
+                self.value = input("Тег: ")
+            # Additional validation can be added if needed
+            if self.value:
+                break
+            else:
+                print('Будь ласка, введіть значення тегу.')
 
     def __getitem__(self):
         return self.value

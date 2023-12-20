@@ -2,8 +2,9 @@ import cmd
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+from pathlib import Path
 from .get_weather_module import get_weather, format_weather
-from .AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note
+from .AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note, Tag
 
 
 class AddressBookCLI(cmd.Cmd):
@@ -15,6 +16,20 @@ class AddressBookCLI(cmd.Cmd):
         super().__init__()
         self.book = AddressBook()
 
+    def do_sort_files(self, args):
+        'Sort files in a directory'
+        folder_path = input("Please enter the path to the directory to sort: ")
+        folder_path = Path(folder_path)
+        if not folder_path.exists() or not folder_path.is_dir():
+            print("Invalid directory path. Please enter a valid path.")
+            return
+        try:
+            # Виклик функції сортування
+            main(folder_path.resolve())
+            print(f"Files in {folder_path} have been sorted.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
     def do_add(self, arg):
         'Add a new contact: add'
         name = Name(input("Ім'я: ")).value.strip()
@@ -23,16 +38,23 @@ class AddressBookCLI(cmd.Cmd):
         birth = Birthday().value
         email = Email().value.strip()
         note = Note(input("Нотатка: ")).value
-        record = Record(name, country, phones, birth, email, note)
+        tags_input = input ( "Теги (через пробіл): " )
+        tags = [Tag ( tag.strip ( ) ).value for tag in tags_input.split ( )]
+        record = Record(name, country, phones, birth, email, note, tags)
         self.book.add(record)
         self.console.print("Контакт успішно додано.", style="bold green")
 
     def do_search(self, arg):
         'Search contacts: search'
-        print("Є наступні категорії: \nName \nCountry \nPhones \nBirthday \nEmail \nNote")
-        category = input('Пошук за категорією: ')
-        pattern = input('Введіть текст для пошуку: ')
-        result = self.book.search(pattern, category)
+        print ( "Є наступні категорії: \nName \nCountry \nPhones \nBirthday \nEmail \nNote \nTags" )
+        category = input ( 'Пошук за категорією: ' )
+        pattern = input ( 'Введіть текст для пошуку: ' )
+
+        if category.lower ( ) == 'tags':
+            # Searching based on tags
+            result = self.book.search_by_tags ( pattern )
+        else:
+            result = self.book.search ( pattern, category )
 
         if not result:
             self.console.print(
@@ -48,6 +70,8 @@ class AddressBookCLI(cmd.Cmd):
         table.add_column("Дата народження", justify="right")
         table.add_column("Електронна пошта", justify="right")
         table.add_column("Примітка", justify="right")
+        table.add_column ( "Теги", justify="right" )
+
 
         # Додаємо результати пошуку до таблиці з використанням Text для форматування
         for account in result:
@@ -59,8 +83,9 @@ class AddressBookCLI(cmd.Cmd):
                 '%d.%m.%Y') if account['birthday'] else "", style="green")
             email = Text(account['email'], style="blue")
             note = Text(account['note'], style="red")
+            tags = Text ( ', '.join ( account['tags'] ) if account['tags'] else "", style="bold white" )
 
-            table.add_row(name, country, phone, birth, email, note)
+            table.add_row ( name, country, phone, birth, email, note, tags )
 
         self.console.print(table)
 
@@ -109,6 +134,7 @@ class AddressBookCLI(cmd.Cmd):
         table.add_column("Дата народження", justify="right")
         table.add_column("Електронна пошта", justify="right")
         table.add_column("Примітка", justify="right")
+        table.add_column ( "Теги", justify="right" )
 
         # Додаємо дані контактів до таблиці з використанням Text для форматування
         for account in self.book.data:
@@ -120,8 +146,9 @@ class AddressBookCLI(cmd.Cmd):
                 '%d.%m.%Y') if account['birthday'] else "", style="green")
             email = Text(account['email'], style="blue")
             note = Text(account['note'], style="red")
+            tags = Text ( ', '.join ( account['tags'] ) if account['tags'] else "", style="bold white" )
 
-            table.add_row(name, country, phone, birth, email, note)
+            table.add_row ( name, country, phone, birth, email, note, tags )
 
         self.console.print(table)
 
