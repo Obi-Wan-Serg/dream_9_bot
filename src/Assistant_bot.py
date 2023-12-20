@@ -2,6 +2,7 @@ import cmd
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+from pathlib import Path
 from .get_weather_module import get_weather, format_weather
 from .AddressBook import AddressBook, Record, Name, Phone, Birthday, Email, Country, Note
 
@@ -14,6 +15,20 @@ class AddressBookCLI(cmd.Cmd):
     def __init__(self):
         super().__init__()
         self.book = AddressBook()
+
+    def do_sort_files(self, args):
+        'Sort files in a directory'
+        folder_path = input("Please enter the path to the directory to sort: ")
+        folder_path = Path(folder_path)
+        if not folder_path.exists() or not folder_path.is_dir():
+            print("Invalid directory path. Please enter a valid path.")
+            return
+        try:
+            # Виклик функції сортування
+            main(folder_path.resolve())
+            print(f"Files in {folder_path} have been sorted.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def do_add(self, arg):
         'Add a new contact: add'
