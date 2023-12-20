@@ -41,11 +41,11 @@ class AddressBook(UserList):
         for number in self.data[self.counter]['phones']:
             if number:
                 phones.append(number)
-        result = (
-            "_" * 50 + "\n" +
-            f"Name: {self.data[self.counter]['name']} \nCountry: {self.data[self.counter]['country']} \nPhones: {', '.join(phones)} \nBirthday: {birth} \nEmail: {self.data[self.counter]['email']} \nNote: {self.data[self.counter]['note']}\n" +
-            "_" * 50
-        )
+        result = "_" * 50 + "\n" + (f"Name: {self.data[self.counter]['name']} "
+                                    f"\nCountry: {self.data[self.counter]['country']} "
+                                    f"\nPhones: {', '.join(phones)} \nBirthday: {birth} "
+                                    f"\nEmail: {self.data[self.counter]['email']} "
+                                    f"\nNote: {self.data[self.counter]['note']}\n") + "_" * 50
         return result
 
     def __iter__(self):
@@ -72,7 +72,8 @@ class AddressBook(UserList):
                    'phones': record.phones,
                    'birthday': record.birthday,
                    'email': record.email,
-                   'note': record.note}
+                   'note': record.note,
+                   'tags': record.tags}  # Додати теги до запису
         self.data.append(account)
         self.log(f"Контакт {record.name} було додано.")
 
@@ -100,13 +101,19 @@ class AddressBook(UserList):
 
         for account in self.data:
             if category_new == 'phones':
-
                 for phone in account['phones']:
-
-                    if phone.lower().startswith(pattern_new):
+                    if phone.lower().replace(' ', '').startswith(pattern_new):
                         result.append(account)
-            elif account[category_new].lower().replace(' ', '') == pattern_new:
-                result.append(account)
+                        break
+            elif category_new == 'tags':
+                for tag in account.get('tags', []):
+                    if tag.lower().replace(' ', '') == pattern_new:
+                        result.append(account)
+                        break
+            else:
+                if account.get(category_new, '').lower().replace(' ', '') == pattern_new:
+                    result.append(account)
+
         if not result:
             print('Такого контакту не знайдено!')
         return result
@@ -185,3 +192,11 @@ class AddressBook(UserList):
             if len(value):
                 result.append(f"{key}: {' '.join(value)}")
         return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+
+    def search_by_tags(self, pattern):
+        results = []
+        for record in self.data:
+            if any ( tag.lower ( ) == pattern.lower ( ) for tag in record.get ( 'tags', [] ) ):
+                results.append ( record )
+
+        return results
