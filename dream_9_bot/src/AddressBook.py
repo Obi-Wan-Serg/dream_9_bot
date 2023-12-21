@@ -71,7 +71,8 @@ class AddressBook(UserList):
     def log(self, action):
         current_time = dt.strftime(dt.now(), '%H:%M:%S')
         message = f'[{current_time}] {action}'
-        log_path = os.path.join('src', 'logs.txt')
+        log_path = os.path.join('', 'logs.txt')
+        # log_path = os.path.join('src', 'logs.txt')
         with open(log_path, 'a') as file:
             file.write(f'{message}\n')
 
@@ -87,13 +88,15 @@ class AddressBook(UserList):
         self.log(f"Контакт {record.name} було додано.")
 
     def save(self, file_name):
-        file_path = os.path.join('src', file_name + '.bin')
+        file_path = os.path.join('', file_name + '.bin')
+        # file_path = os.path.join('src', file_name + '.bin')
         with open(file_path, 'wb') as file:
             pickle.dump(self.data, file)
         self.log("Книгу контактів збережено!")
 
     def load(self, file_name):
-        file_path = os.path.join('src', file_name + '.bin')
+        file_path = os.path.join('', file_name + '.bin')
+        # file_path = os.path.join('src', file_name + '.bin')
         emptyness = os.stat(file_path)
         if emptyness.st_size != 0:
             with open(file_path, 'rb') as file:

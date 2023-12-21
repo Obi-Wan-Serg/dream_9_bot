@@ -1,5 +1,6 @@
 import os
 from .src.Assistant_bot import AddressBookCLI
+# from src.Assistant_bot import AddressBookCLI
 from rich.console import Console
 
 
@@ -13,7 +14,8 @@ def main():
 
     cli = AddressBookCLI()
 
-    file_path = os.path.join('src', 'auto_save.bin')
+    file_path = os.path.join('.src', 'auto_save.bin')
+    # file_path = os.path.join('src', 'auto_save.bin')
 
     # Перевіряємо, чи існує файл перед його завантаженням
     if os.path.exists(file_path):
