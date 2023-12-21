@@ -4,6 +4,12 @@ import pickle
 from .validate import *
 import os
 
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[0;33m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
+
 
 class AddressBook(UserList):
     def __init__(self):
@@ -42,10 +48,13 @@ class AddressBook(UserList):
             if number:
                 phones.append(number)
         result = "_" * 50 + "\n" + (f"Name: {self.data[self.counter]['name']} "
-                                    f"\nCountry: {self.data[self.counter]['country']} "
-                                    f"\nPhones: {', '.join(phones)} \nBirthday: {birth} "
-                                    f"\nEmail: {self.data[self.counter]['email']} "
-                                    f"\nNote: {self.data[self.counter]['note']}\n") + "_" * 50
+                                    f"\nCountry: {
+                                        self.data[self.counter]['country']} "
+                                    f"\nPhones: {', '.join(phones)} \nBirthday: {
+            birth} "
+            f"\nEmail: {
+                                        self.data[self.counter]['email']} "
+            f"\nNote: {self.data[self.counter]['note']}\n") + "_" * 50
         return result
 
     def __iter__(self):
@@ -115,7 +124,7 @@ class AddressBook(UserList):
                     result.append(account)
 
         if not result:
-            print('Такого контакту не знайдено!')
+            print(f'{RESET}{RED}Такого контакту не знайдено!{RESET}{YELLOW}')
         return result
 
     def edit(self, contact_name, parameter, new_value):
@@ -142,9 +151,10 @@ class AddressBook(UserList):
             if contact_name not in names:
                 raise NameError
         except ValueError:
-            print('Невірний параметр! Спробуйте знову.')
+            print(f'{RESET}{RED}Невірний параметр! Спробуйте знову.{
+                  RESET}{YELLOW}')
         except NameError:
-            print('Такого контакту не знайдено!')
+            print(f'{RESET}{RED}Такого контакту не знайдено!{RESET}{YELLOW}')
         else:
             self.log(f"Контакт {contact_name} відредаговано!")
             return True
@@ -196,7 +206,7 @@ class AddressBook(UserList):
     def search_by_tags(self, pattern):
         results = []
         for record in self.data:
-            if any ( tag.lower ( ) == pattern.lower ( ) for tag in record.get ( 'tags', [] ) ):
-                results.append ( record )
+            if any(tag.lower() == pattern.lower() for tag in record.get('tags', [])):
+                results.append(record)
 
         return results

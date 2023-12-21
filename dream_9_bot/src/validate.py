@@ -2,6 +2,12 @@ from datetime import date, datetime
 import re
 from abc import ABC, abstractmethod
 
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[0;33m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
+
 
 class Record:
 
@@ -52,7 +58,8 @@ class Country(Field):
             if value:
                 self.value = value
             else:
-                self.value = input('Громадянство (країна): ')
+                self.value = input(
+                    f'{RESET}{BLUE}Громадянство (країна): {RESET}{YELLOW}')
             # валідація введеної країни по наявності в списку заборонених країн
             try:
                 if self.value.lower() in country_404:
@@ -62,7 +69,8 @@ class Country(Field):
                 else:
                     raise ValueError
             except ValueError:
-                print('На щастя, такої країни не існує або вона вже на межі колапсу.\nВаш контакт не буде додано, спробуйте іншу країну для продовження.')
+                print(f'{RESET}{RED}На щастя, такої країни не існує або вона вже на межі колапсу.\nВаш контакт не буде додано, спробуйте іншу країну для продовження.{
+                      RESET}{YELLOW}')
 
     def __getitem__(self):
         return self.value
@@ -77,7 +85,7 @@ class Phone(Field):
                 self.values = value
             else:
                 self.values = input(
-                    "Будь ласка введіть номер телефону у форматі 10 чисел, починаючи з нуля\n(для декількох номерів використовуйте пробіл між ними): ")
+                    f"{RESET}{BLUE}Будь ласка введіть номер телефону у форматі 10 чисел, починаючи з нуля\n(для декількох номерів використовуйте пробіл між ними): {RESET}{YELLOW}")
             # перевірка на правильність введенного телефонного номеру
             try:
                 for number in self.values.split(' '):
@@ -87,7 +95,7 @@ class Phone(Field):
                         raise ValueError
             except ValueError:
                 print(
-                    'Будь ласка введіть номер правильно; має бути 10 чисел.')
+                    f'{RESET}{RED}Будь ласка введіть номер правильно; має бути 10 чисел.{RESET}{YELLOW}')
             else:
                 break
 
@@ -103,7 +111,8 @@ class Birthday(Field):
             if value:
                 input_value = value
             else:
-                input_value = input("Дата народження (dd.mm.YYYY): ")
+                input_value = input(
+                    f"{RESET}{BLUE}Дата народження (dd.mm.YYYY): {RESET}{YELLOW}")
             try:
                 # перевірка правильності введення дати народження
                 if re.fullmatch(r'^\d{1,2}\.\d{1,2}\.\d{4}$', input_value):
@@ -120,7 +129,7 @@ class Birthday(Field):
                     raise ValueError
             except ValueError:
                 print(
-                    'Дата народження має бути у форматі: день.місяць.рік.\nДата народження не може бути в майбутньому!')
+                    f'{RESET}{RED}Дата народження має бути у форматі: день.місяць.рік.\nДата народження не може бути в майбутньому!{RESET}{YELLOW}')
 
     def __getitem__(self):
         return self.value
@@ -134,7 +143,7 @@ class Email(Field):
             if value:
                 self.value = value
             else:
-                self.value = input("Email: ")
+                self.value = input(f"{BLUE}Email: {RESET}")
             try:
                 # перевірка правильності введення електронної адреси
                 if re.match(r'^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$', self.value) or self.value == '':
@@ -142,7 +151,8 @@ class Email(Field):
                 else:
                     raise ValueError
             except ValueError:
-                print('Будь ласка введіть email в правильному форматі.')
+                print(f'{RESET}{RED}Будь ласка введіть email в правильному форматі.{
+                      RESET}{YELLOW}')
 
     def __getitem__(self):
         return self.value
@@ -164,12 +174,13 @@ class Tag(Field):
             if value:
                 self.value = value
             else:
-                self.value = input("Тег: ")
+                self.value = input(f"{RESET}{BLUE}Тег: {RESET}{YELLOW}")
             # Additional validation can be added if needed
             if self.value:
                 break
             else:
-                print('Будь ласка, введіть значення тегу.')
+                print(f'{RESET}{RED}Будь ласка, введіть значення тегу.{
+                      RESET}{YELLOW}')
 
     def __getitem__(self):
         return self.value
