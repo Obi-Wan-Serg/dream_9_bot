@@ -9,7 +9,7 @@ from .main import main
 
 
 class AddressBookCLI(cmd.Cmd):
-    intro = 'Для користування книгою контактів наберіть help чи ?.\n'
+    intro = 'Щоб побачити доступні команди наберіть help чи ?.\nЩоб побачити інформацію про конкретну команду наберіть help [назва_команди]'
     prompt = '>>>>>>>  '
     console = Console()
 
@@ -23,14 +23,14 @@ class AddressBookCLI(cmd.Cmd):
             "Будь ласка вкажіть шлях до папки\n в якій необхідно відсортувати файли: ")
         folder_path = Path(folder_path)
         if not folder_path.exists() or not folder_path.is_dir():
-            print("Вказано невірний шлях. Спробуйте ще раз.")
+            self.console.print("Вказано невірний шлях. Спробуйте ще раз.", style="italic red")
             return
         try:
             # Виклик функції сортування
             main(folder_path.resolve())
-            print(f"Файли за шляхом {folder_path} були відсортовані.")
+            self.console.print(f"Файли за шляхом {folder_path} були відсортовані.", style="italic red")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            self.console.print(f"An error occurred: {e}", style="italic red")
 
     def do_add(self, arg):
         'Add a new contact: add'
@@ -63,7 +63,7 @@ class AddressBookCLI(cmd.Cmd):
                 "Такий контакт відсутній в книзі контактів!", style="bold red")
             return
 
-        table = Table(show_header=True, header_style="bold magenta")
+        table = Table(show_header=True, header_style="bold white")
 
         # Додаємо стовпці до таблиці
         table.add_column("Ім'я")
@@ -76,16 +76,16 @@ class AddressBookCLI(cmd.Cmd):
 
         # Додаємо результати пошуку до таблиці з використанням Text для форматування
         for account in result:
-            name = Text(account['name'], style="cyan")
+            name = Text(account['name'], style="blue")
             country = Text(account['country'], style="yellow")
             phone = Text(
-                ', '.join(account['phones']) if account['phones'] else "", style="magenta")
+                ', '.join(account['phones']) if account['phones'] else "", style="blue")
             birth = Text(account['birthday'].strftime(
-                '%d.%m.%Y') if account['birthday'] else "", style="green")
+                '%d.%m.%Y') if account['birthday'] else "", style="yellow")
             email = Text(account['email'], style="blue")
-            note = Text(account['note'], style="red")
+            note = Text(account['note'], style="yellow")
             tags = Text(
-                ', '.join(account['tags']) if account['tags'] else "", style="bold white")
+                ', '.join(account['tags']) if account['tags'] else "", style="bold blue")
 
             table.add_row(name, country, phone, birth, email, note, tags)
 
@@ -123,11 +123,11 @@ class AddressBookCLI(cmd.Cmd):
 
     def do_congratulate(self, arg):
         'Congratulate contacts: congratulate'
-        self.console.print(self.book.congratulate(), style="bold yellow")
+        self.console.print(self.book.congratulate(), style="bold magenta")
 
     def do_view(self, arg):
         'View all contacts: view'
-        table = Table(show_header=True, header_style="bold magenta")
+        table = Table(show_header=True, header_style="bold white")
 
         # Додаємо стовпці до таблиці
         table.add_column("Ім'я")
@@ -140,16 +140,16 @@ class AddressBookCLI(cmd.Cmd):
 
         # Додаємо дані контактів до таблиці з використанням Text для форматування
         for account in self.book.data:
-            name = Text(account['name'], style="cyan")
+            name = Text(account['name'], style="blue")
             country = Text(account['country'], style="yellow")
             phone = Text(
-                ', '.join(account['phones']) if account['phones'] else "", style="magenta")
+                ', '.join(account['phones']) if account['phones'] else "", style="blue")
             birth = Text(account['birthday'].strftime(
-                '%d.%m.%Y') if account['birthday'] else "", style="green")
+                '%d.%m.%Y') if account['birthday'] else "", style="yellow")
             email = Text(account['email'], style="blue")
-            note = Text(account['note'], style="red")
+            note = Text(account['note'], style="yellow")
             tags = Text(
-                ', '.join(account['tags']) if account['tags'] else "", style="bold white")
+                ', '.join(account['tags']) if account['tags'] else "", style="bold blue")
 
             table.add_row(name, country, phone, birth, email, note, tags)
 

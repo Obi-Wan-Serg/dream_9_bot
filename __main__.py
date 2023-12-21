@@ -5,8 +5,8 @@ from rich.console import Console
 if __name__ == "__main__":
     console = Console()
 
-    console.print('Привіт! Я ваш помічник з контактами.', style="bold green")
-    console.print('Що я маю зробити з вашими контактами?', style="bold blue")
+    console.print('Привіт! Я ваш помічник з контактами.', style="bold blue")
+    #console.print('Що я маю зробити з вашими контактами?', style="bold yellow")
 
     cli = AddressBookCLI()
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     if os.path.exists(file_path):
         cli.book.load("auto_save")
         console.print("Завантажено існуючу адресну книгу.",
-                      style="italic yellow")
+                      style="italic green")
     else:
         console.print(
             "Жодного збереженого адресного книги не знайдено. Починаємо з порожньої книги.", style="italic red")
