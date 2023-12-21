@@ -143,7 +143,7 @@ class Email(Field):
             if value:
                 self.value = value
             else:
-                self.value = input(f"{BLUE}Email: {RESET}")
+                self.value = input(f"{RESET}{BLUE}Email: {RESET}{YELLOW}")
             try:
                 # перевірка правильності введення електронної адреси
                 if re.match(r'^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$', self.value) or self.value == '':
