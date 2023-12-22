@@ -14,7 +14,7 @@ def main():
 
     cli = AddressBookCLI()
 
-    file_path = os.path.join('.src', 'auto_save.bin')
+    file_path = os.path.join('', 'auto_save.bin')
     # file_path = os.path.join('src', 'auto_save.bin')
 
     # Перевіряємо, чи існує файл перед його завантаженням

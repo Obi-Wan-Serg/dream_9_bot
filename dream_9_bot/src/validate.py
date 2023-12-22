@@ -53,8 +53,8 @@ class Country(Field):
 
     def __init__(self, value=''):
         while True:
-            country_404 = ['russia', 'rossiya', 'rossiia', 'rossiya',
-                           'rasiya', 'rossiya', 'rosija', 'rusia', 'rwsia', 'rwsiya', 'росія', 'россия', 'росия', 'россія', 'руссія', 'русія']
+            country_404 = ['russia', 'russsia', 'rusiia', 'rusiiia', 'rossiya', 'rossiia', 'rossiya',
+                           'rasiya', 'rossiya', 'rosija', 'rusia', 'rwsia', 'rwsiya', 'росія', 'росіія', 'россия', 'россиия', 'росиия', 'росия', 'россія', 'руссія', 'русія']
             if value:
                 self.value = value
             else:
