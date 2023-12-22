@@ -31,13 +31,13 @@ class AddressBookCLI(cmd.Cmd):
                           RESET} {MAGENTA}{line}\n{RESET}{YELLOW}")
 
     def do_play_game(self, arg):
-        'Запустити гру "Вгадай число"'
+        'Запустити гру "Вгадай число": play_game'
         game = GuessNumberGame()
         game.play()
         self.console.print("Дякуємо за гру!", style="bold green")
 
     def do_sort_files(self, args):
-        'Sort files in a directory'
+        'Відсортувати файли в папці по вказаному шляху: sort_files'
         folder_path = input(
             f"{RESET}{BLUE}Будь ласка вкажіть шлях до папки\nв якій необхідно відсортувати файли: {RESET}{YELLOW}")
         folder_path = Path(folder_path)
@@ -54,7 +54,7 @@ class AddressBookCLI(cmd.Cmd):
             self.console.print(f"An error occurred: {e}", style="italic red")
 
     def do_add(self, arg):
-        'Add a new contact: add'
+        'Додати новий контакт: add'
         name = Name(input(f"{RESET}{BLUE}Ім'я: {RESET}{YELLOW}")).value.strip()
         country = Country().value.capitalize()
         phones = Phone().value
@@ -69,7 +69,7 @@ class AddressBookCLI(cmd.Cmd):
         self.console.print("Контакт успішно додано.", style="bold green")
 
     def do_search(self, arg):
-        'Search contacts: search'
+        'Пошук за категоріями: search'
         print(f"{RESET}{BLUE}Є наступні категорії: \nName \nCountry \nPhones \nBirthday \nEmail \nNote \nTags{
               RESET}{YELLOW}")
         category = input(f'{RESET}{BLUE}Пошук за категорією: {RESET}{YELLOW}')
@@ -116,7 +116,7 @@ class AddressBookCLI(cmd.Cmd):
         self.console.print(table)
 
     def do_edit(self, arg):
-        'Edit a contact: edit'
+        'Редагування контакту: edit'
         contact_name = input(f"{RESET}{BLUE}Ім'я контакту: {RESET}{YELLOW}")
         parameter = input(
             f'{RESET}{BLUE}Оберіть параметр для редагування\n(name, country, phones, birthday, email, note): {RESET}{YELLOW}').strip()
@@ -126,32 +126,32 @@ class AddressBookCLI(cmd.Cmd):
                            style="bold green")
 
     def do_remove(self, arg):
-        'Remove a contact: remove'
+        'Видалення контакту: remove'
         pattern = input(
             f"{RESET}{BLUE}Видалити (ім'я контакту чи номер телефону): {RESET}{YELLOW}")
         self.book.remove(pattern)
         self.console.print("Контакт успішно видалено.", style="bold green")
 
     def do_save(self, arg):
-        'Save address book to a file: save'
+        'Зберегти книгу контактів в файл: save'
         file_name = input(f"{RESET}{BLUE}Ім'я файла: {RESET}{YELLOW}")
         self.book.save(file_name)
         self.console.print(
             "Книга контактів успішно збережена.", style="bold green")
 
     def do_load(self, arg):
-        'Load address book from a file: load'
+        'Завантажити книгу контактів з файлу: load'
         file_name = input(f"{RESET}{BLUE}Ім'я файла: {RESET}{YELLOW}")
         self.book.load(file_name)
         self.console.print(
             "Книга контактів успішно завантажена.", style="bold green")
 
     def do_congratulate(self, arg):
-        'Congratulate contacts: congratulate'
+        'Перевірити в яких контактів був день нарождення на цьому тижні: congratulate'
         self.console.print(self.book.congratulate(), style="bold magenta")
 
     def do_view(self, arg):
-        'View all contacts: view'
+        'Переглянути книгу контактів: view'
         table = Table(show_header=True, header_style="bold white")
 
         # Додаємо стовпці до таблиці
@@ -181,7 +181,7 @@ class AddressBookCLI(cmd.Cmd):
         self.console.print(table)
 
     def do_weather(self, arg):
-        'Get weather for a city: weather [city_name]'
+        'Дізнатись погоду в місті: weather [city_name]'
         city = arg or input(
             f"{RESET}{BLUE}Введіть назву міста: {RESET}{YELLOW}")
         api_key = '16bfe776fb8afe007ed1f21a6277aba2'  # Ваш API-ключ
@@ -193,7 +193,7 @@ class AddressBookCLI(cmd.Cmd):
             self.console.print(f"Error: {str(e)}", style="bold red")
 
     def do_exit(self, arg):
-        'Exit the application: exit'
+        'Вихід з програми: exit'
         return True
 
 
